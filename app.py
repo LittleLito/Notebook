@@ -1,5 +1,4 @@
 import os
-import time
 import click
 from flask import Flask, flash, redirect, url_for, render_template, abort
 from flask_sqlalchemy import SQLAlchemy
@@ -33,11 +32,10 @@ def initdb():
 
 @app.route('/')
 def index():
-    time_now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     form1 = DoneNoteForm()
     form2 = DeleteNoteForm()
     notes = Note.query.all()
-    return render_template('index.html', notes=notes, form1=form1, form2=form2, time_now=time_now)
+    return render_template('index.html', notes=notes, form1=form1, form2=form2)
 
 
 @app.route('/new', methods=['GET', 'POST'])
@@ -50,7 +48,7 @@ def new_note():
         db.session.commit()
         flash('Your note is saved')
         return redirect(url_for('index'))
-    return render_template('edit_note.html', form=form)
+    return render_template('edit_note.html', form=form, title='New note')
 
 
 @app.route('/edit/<int:note_id>', methods=['GET', 'POST'])
@@ -63,7 +61,7 @@ def edit_note(note_id):
         flash('Your note is updated')
         return redirect(url_for('index'))
     form.body.data = note.body
-    return render_template('edit_note.html', form=form)
+    return render_template('edit_note.html', form=form, title='Edit note')
 
 
 @app.route('/delete/<int:note_id>', methods=['POST'])
