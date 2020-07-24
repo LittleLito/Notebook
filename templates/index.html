@@ -1,0 +1,86 @@
+{% from 'macros.html' import static_file, get_flash %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notebook</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.0/css/bootstrap.css">
+    <script type="text/javascript" src="static/scripts.js"></script>
+</head>
+<body>
+
+{{ get_flash() }}
+
+<div style="margin: 60px">
+
+<h1 class="h1">Notebook</h1>
+
+<h4 class="h4">{{ notes|length }} notes:</h4>
+<p style="display: inline" class="btn-group"><a href="{{ url_for('new_note') }}" class="">
+    <button class="btn btn-success">+ New Note</button>
+</a>
+<button class="btn" id="sy_time"></button> </p>
+
+<hr>
+
+{% for note in notes %}
+    <div class="list-group">
+
+    {% if note.done %}
+        <p class="list-group-item font-weight-light" style="text-decoration: line-through; color: grey">{{ note.body }}</p>
+    {% else %}
+        <p class="list-group-item">{{ note.body }}</p>
+    {% endif %}
+
+        <div class="btn-group">
+        <form method="post" action="{{ url_for('done_note', note_id=note.id) }}">
+            {{ form1.csrf_token }}
+            {{ form1.submit(class='btn btn-success') }}
+        </form>
+        <a href="{{ url_for('edit_note', note_id=note.id) }}">
+            <button type="button" class="btn btn-primary">Edit</button>
+        </a>
+        <form method="post" action="{{ url_for('delete_note', note_id=note.id) }}">
+            {{ form2.csrf_token }}
+            {{ form2.submit(class='btn btn-dark') }}
+        </form>
+        </div>
+
+    </div>
+
+    <hr>
+{% endfor %}
+
+</div>
+
+<script type="text/javascript">
+    function add_0(num) {
+        if (num<=9) {
+            return '0' + num
+        }
+        else {
+           return num
+        }
+    }
+
+    function getTime(){
+        str = "Datetime："
+        var p = document.getElementById("sy_time");
+        time = new Date();
+        year = add_0(time.getFullYear());
+        month = add_0(time.getMonth() + 1);
+        day = add_0(time.getDate());
+        hour = add_0(time.getHours());
+        minutes = add_0(time.getMinutes());
+        seconds = add_0(time.getSeconds());
+        str = str + year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+        p.innerText = str;
+        setTimeout(getTime,1000);
+}
+window.onload = function(){
+    getTime();
+}
+</script>
+
+</body>
+</html>

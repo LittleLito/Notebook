@@ -1,0 +1,28 @@
+{% from 'macros.html' import static_file, form_field %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Note</title>
+    {{ static_file('css', 'style.css') }}
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+
+<div style="margin: 60px">
+    <a href="{{ url_for('index') }}">
+        <button class="btn btn-primary"><-Back</button>
+    </a>
+    <h1>New Note</h1>
+    <form method="post">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            {{ form_field(form.body, class='form-control', rows='10') }}
+        </div>
+            {{ form.submit(class='btn btn-primary') }}
+
+    </form>
+</div>
+
+</body>
+</html>
